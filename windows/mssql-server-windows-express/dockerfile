@@ -4,6 +4,7 @@ LABEL maintainer "Perry Skountrianos"
 
 # Download Links:
 ENV sql_express_download_url "https://go.microsoft.com/fwlink/?linkid=829176"
+ENV Ext_Data_Volume "C:\Data"
 
 ENV sa_password="_" \
     attach_dbs="[]" \
@@ -11,6 +12,8 @@ ENV sa_password="_" \
     sa_password_path="C:\ProgramData\Docker\secrets\sa-password"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+VOLUME ${Ext_Data_Volume}
 
 # make install files accessible
 COPY start.ps1 /
@@ -26,4 +29,4 @@ RUN stop-service MSSQL`$SQLEXPRESS ; \
         set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpport -value 1433 ; \
         set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\' -name LoginMode -value 2 ;
 
-CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
+CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -DataVolume $env:Ext_Data_Volume -Verbose
