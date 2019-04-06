@@ -1,4 +1,4 @@
-image: Windows Server 2016
+image: Visual Studio 2017
 
 build_script:
   - ps: .\windows\build.ps1
