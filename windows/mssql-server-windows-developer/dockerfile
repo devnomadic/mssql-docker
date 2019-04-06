@@ -5,6 +5,7 @@ LABEL maintainer "Perry Skountrianos"
 # Download Links:
 ENV exe "https://go.microsoft.com/fwlink/?linkid=840945"
 ENV box "https://go.microsoft.com/fwlink/?linkid=840944"
+ENV Ext_Data_Volume "C:\Data"
 
 ENV sa_password="_" \
     attach_dbs="[]" \
@@ -12,6 +13,8 @@ ENV sa_password="_" \
     sa_password_path="C:\ProgramData\Docker\secrets\sa-password"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+VOLUME ${Ext_Data_Volume}
 
 # make install files accessible
 COPY start.ps1 /
@@ -30,4 +33,4 @@ RUN stop-service MSSQLSERVER ; \
 
 HEALTHCHECK CMD [ "sqlcmd", "-Q", "select 1" ]
 
-CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
+CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -DataVolume $env:Ext_Data_Volume -Verbose
